@@ -22,7 +22,7 @@ The package helps you to:
 
 ## Installation
 
-You can install the development version of rKenyaForex from [GitHub](https://github.com/) with:
+You can install the development version of EcoMetrics from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
