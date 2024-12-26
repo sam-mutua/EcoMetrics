@@ -19,3 +19,11 @@ The package helps you to:
 - Evaluate goodness-of-fit metrics (e.g., R-squared, Adjusted R-squared, AIC, BIC).
 
 3. ARIMA time series models
+
+## Installation
+
+You can install the development version of rKenyaForex from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("sam-mutua/EcoMetrics")
