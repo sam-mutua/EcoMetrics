@@ -1,0 +1,221 @@
+---
+title: "EcoMetrics"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{EcoMetrics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This provides a guideline on how to use the package in teaching Regression Modeling and Basic Econometrics Modules for undergraduate students.
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(EcoMetrics)
+```
+
+# Basic Regression Analysis Concepts
+
+## Fitting Simple Linear Model
+
+A simple linear model given by $Y = \beta_{0} + \beta_{1}X + \varepsilon$ can be fit using the function described below to get the estimates of $\hat{\beta_{0}}$ and $\hat{\beta_{1}}$.
+
+
+```{r}
+simple_model <- ols_model(data = eduperform, "pi", c("hs"))
+simple_model
+```
+
+
+## Fitting Multiple Linear Model
+
+Given a Multiple linear regression equation:
+
+$$Y = \beta_{0}+\beta_{1}X_{1} + \beta_{2}X_{2}+...+\beta_{p}X_{p} + \varepsilon$$ one can get the estimate of $\hat{beta}$ given as:
+
+$$\hat{\beta} = (X^{\prime}X)^{-1}X^{\prime}Y$$
+```{r}
+multiple_model <- ols_model(data = eduperform, "pi", c("hs","ps"))
+multiple_model
+```
+
+
+## Model Summary Statistics
+
+The important metrics of a fitted model care given by:
+
+```{r}
+ols_model_stats(data = eduperform, "pi", c("hs", "ps"))
+```
+
+
+
+## Model Summary Statistics
+
+The Model Summary Statistics of the model are given by:
+
+```{r}
+ols_model_stats(data = eduperform, "pi", c("hs", "ps"))
+```
+
+
+## F-Statistic Summary
+
+The F-Statistic attributes of the fitted model:
+
+```{r}
+ols_model_sig(data = eduperform, "pi", c("hs", "ps"))
+```
+
+
+## Checking Overall Model Significance
+
+```{r}
+check_model_sig(data = eduperform, "pi", c("hs", "ps"))
+```
+
+
+## Confidence Intervals of Parameters
+
+```{r}
+get_confint(data = eduperform, "pi", c("hs", "ps"))
+```
+
+
+## Obtain Only Significant Parameters
+
+```{r}
+get_significant_predictors(data = eduperform, "pi", c("hs", "ps"))
+```
+
+
+## Getting Variance of Coefficients
+
+```{r}
+get_coefficients_variance(data = eduperform, "pi", c("hs", "ps"))
+```
+
+
+## Predicting New Observations
+
+```{r}
+model <- lm(pi ~ hs + ps, data = eduperform)
+newdata <- data.frame(hs =c(2,3,4),ps = c(23,24,12))
+predict_dep_var(model, new_data = newdata, level = 0.95)
+```
+
+
+
+## Model Assumptions
+
+After fitting a multiple linear model it is prudent to check the model assumptions. Here we describe how to do this:
+
+
+### Normality Assumption
+
+The null hypothesis is that the residuals are normally distributed.
+
+```{r}
+model <- lm(pi ~ hs + ps, data = eduperform)
+normality_assumption(model)
+```
+
+
+### Heteroscedasticity Assumption
+
+The null hypothesis is that the variance of the residuals is constant (Homoscedastic)
+
+```{r}
+model <- lm(pi ~ hs + ps, data = eduperform)
+heteroscedasticity_assumption(model)
+```
+
+
+### Multicollonearity Assumption
+
+```{r}
+model <- lm(pi ~ hs + ps, data = eduperform)
+multicollinearity_assumption(model)
+```
+
+
+### Autocorrelation Assumption
+
+```{r}
+model <- lm(pi ~ hs + ps, data = eduperform)
+autocorrelation_assumption(model)
+```
+
+## Choosing Optimal Linear Regression Model
+
+Often one is supposed to select the optimal model and the criteria is either AIC, BIC or Adjusted R-Squared
+
+```{r}
+data(eduperform)
+model1 <- lm(pi ~ hs, data = eduperform)
+model2 <- lm(pi ~ hs + ps, data = eduperform)
+model3 <- lm(pi ~ hs + ps + sh, data = eduperform)
+models <- list(model1, model2, model3)
+select_optimal_model(models, criterion= "AIC")
+```
+
+
+
+# Basic Time Series Concepts
+
+This section describes the very basic time series concepts of testing stationarity, plotting ACF and PACF of time series data, fitting ARIMA models and selecting the optimal ARIMA(p,d,q) model.
+
+
+## Testing Stationarity
+
+We implement the ADF test.
+
+```{r}
+data(keconomy)
+attach(keconomy)
+check_stationarity(UR)
+```
+
+
+## Plotting ACF and PACF of time series data
+
+```{r}
+data(keconomy)
+attach(keconomy)
+ACF_PLOT(UR)
+```
+
+
+
+```{r}
+data(keconomy)
+attach(keconomy)
+PACF_PLOT(UR)
+```
+
+
+
+## Fitting ARIMA models
+
+```{r}
+data(keconomy)
+attach(keconomy)
+fit_arima(UR, p=2,d=0,q=3)
+```
+
+
+## Selecting Optimal ARIMA model
+
+```{r}
+data(keconomy)
+attach(keconomy)
+best_arima(UR, max_p = 5, max_d = 2, max_q = 5)
+```
+
